@@ -19,6 +19,30 @@ export default {
       fontFamily: {
         'inter': ['Inter', 'sans-serif'], // Fallback to system sans-serif
       },
+      keyframes: {
+        slideIn: {
+          '0%': { transform: 'translateX(100%)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
+        slideOut: {
+          '0%': { transform: 'translateX(0)', opacity: '1' },
+          '100%': { transform: 'translateX(-100%)', opacity: '0' },
+        },
+        loadingBar: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(200%)' },
+        },
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+      },
+      animation: {
+        slideIn: 'slideIn 0.3s ease-out',
+        slideOut: 'slideOut 0.3s ease-in',
+        loadingBar: 'loadingBar 1.5s infinite',
+        fadeIn: 'fadeIn 0.3s ease-out',
+      },
     },
   },
   plugins: [], // Add Tailwind plugins here if needed

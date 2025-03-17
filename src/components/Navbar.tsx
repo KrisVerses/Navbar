@@ -22,7 +22,7 @@ const Navbar = () => {
 
     // Common NavLink classes with active state styling
     const navLinkClasses = ({ isActive }: { isActive: boolean }) => `
-        text-museum-text hover:text-museum-hover transition-colors
+        text-museum-text hover:text-museum-hover transition-colors 
         ${isActive ? 'font-semibold border-b-2 border-museum-text' : ''}
     `;
 
@@ -190,4 +190,41 @@ export default Navbar;
  *    - Add light/dark mode toggle
  *    - Implement color scheme preference detection
  *    - Add smooth theme transitions
- */ 
+ */
+
+// We can create a slide/fade effect when changing routes by:
+// 1. Adding a transition wrapper component
+// 2. Using Framer Motion or React Transition Group
+// Here's a simple example:
+
+const PageTransition = ({ children }: { children: React.ReactNode }) => {
+    return (
+        <div className="
+      animate-slideIn 
+      transition-all duration-300 
+      translate-x-0 opacity-100
+      enter:translate-x-full enter:opacity-0
+      leave:translate-x-[-100%] leave:opacity-0
+    ">
+            {children}
+        </div>
+    );
+};
+
+// We can add loading indicators:
+// 1. Subtle loading bar at the top of navbar
+// 2. Skeleton loading state for content
+// 3. Loading spinner for navigation
+
+const LoadingBar = () => (
+    <div className="
+    absolute top-0 left-0 h-0.5 
+    bg-museum-text/20 w-full
+    overflow-hidden
+  ">
+        <div className="
+      h-full w-1/3 bg-museum-text
+      animate-loadingBar
+    "/>
+    </div>
+); 
