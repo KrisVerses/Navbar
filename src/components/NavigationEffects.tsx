@@ -11,41 +11,77 @@ import { AnimatePresence, motion } from 'framer-motion';
  * 3. Loading state indicators
  */
 
-export const LoadingBar = () => (
-    <div className="absolute top-0 left-0 h-0.5 bg-museum-text/20 w-full overflow-hidden">
-        <div className="h-full w-1/3 bg-museum-text animate-loadingBar" />
-    </div>
-);
+/**
+ * Page transition and loading animations
+ * Combines loading indicator and page transitions for better performance
+ */
 
-export const PageTransition = ({ children }: { children: React.ReactNode }) => {
+interface PageTransitionProps {
+    children: React.ReactNode;
+}
+
+export const PageTransition = ({ children }: PageTransitionProps) => {
     const location = useLocation();
+
+    // Animation variants with right-to-left slide
+    const pageVariants = {
+        initial: {
+            opacity: 0,
+            x: 100, // Start from right
+            scale: 0.95
+        },
+        animate: {
+            opacity: 1,
+            x: 0, // Slide to center
+            scale: 1
+        },
+        exit: {
+            opacity: 0,
+            x: -100, // Exit to left
+            scale: 0.95
+        }
+    };
 
     return (
-        <AnimatePresence mode="wait">
+        <div className="relative w-full overflow-hidden">
+            {/* Loading bar - Always mounted but conditionally visible */}
             <motion.div
-                key={location.pathname}
-                initial={{ x: 20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: -20, opacity: 0 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="fixed top-0 left-0 h-0.5 bg-museum-text/20 w-full overflow-hidden z-50"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
             >
-                {children}
+                <motion.div
+                    className="h-full w-1/3 bg-museum-text"
+                    animate={{
+                        x: ["-100%", "200%"],
+                        transition: {
+                            repeat: Infinity,
+                            duration: 1.5,
+                            ease: "linear"
+                        }
+                    }}
+                />
             </motion.div>
-        </AnimatePresence>
+
+            {/* Page content with transitions */}
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key={location.pathname}
+                    variants={pageVariants}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    transition={{
+                        duration: 0.5,
+                        ease: [0.25, 0.1, 0.25, 1], // Custom easing for smoother motion
+                        opacity: { duration: 0.3 }
+                    }}
+                    className="w-full transform-gpu" // Hardware acceleration
+                >
+                    {children}
+                </motion.div>
+            </AnimatePresence>
+        </div>
     );
-};
-
-export const NavigationIndicator = () => {
-    const [isNavigating, setIsNavigating] = useState(false);
-    const location = useLocation();
-
-    useEffect(() => {
-        setIsNavigating(true);
-        const timer = setTimeout(() => setIsNavigating(false), 500);
-        return () => clearTimeout(timer);
-    }, [location]);
-
-    if (!isNavigating) return null;
-
-    return <LoadingBar />;
 }; 
