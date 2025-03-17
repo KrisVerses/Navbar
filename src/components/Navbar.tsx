@@ -1,22 +1,50 @@
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import BackgroundPattern from './BackgroundPattern';
 /**
  * Navbar Component
  * 
- * A responsive navigation bar that implements:
- * - Fixed positioning at the top of the viewport
- * - Responsive container with max-width
- * - Flexbox layout for navigation items
- * - Custom color theming from Tailwind config
- * - Hover state transitions
+ * A modern navigation bar with responsive design, smooth transitions,
+ * and interactive elements. Demonstrates React best practices and
+ * advanced CSS techniques.
  * 
- * Key patterns demonstrated:
- * 1. React Router integration for client-side navigation
- * 2. Tailwind utility-first CSS approach
- * 3. Responsive design patterns
- * 4. Accessibility considerations
+ * Key Concepts:
+ * 1. Responsive Design
+ * 2. CSS Transitions
+ * 3. Route Management
+ * 4. Intersection Observer
+ * 5. Event Handling
+ * 
+ * Learning Exercises:
+ * 
+ * Exercise 1 - Navigation State:
+ * - How is the active route tracked?
+ * - What triggers navigation updates?
+ * - How are route changes animated?
+ * 
+ * Exercise 2 - Responsive Design:
+ * - Study the mobile menu implementation
+ * - Understand breakpoint management
+ * - Analyze transition behaviors
+ * 
+ * Exercise 3 - Scroll Effects:
+ * - How is scroll position monitored?
+ * - What triggers navbar transparency?
+ * - Study the intersection observer usage
+ * 
+ * Exercise 4 - Performance:
+ * - Identify potential performance bottlenecks
+ * - Understand event listener cleanup
+ * - Study component optimization
+ */
+
+import { useState, useEffect, useRef } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import BackgroundPattern from './BackgroundPattern';
+import HamburgerMenu from './HamburgerMenu';
+/**
+ * Navigation Configuration
+ * 
+ * Centralized navigation data for easy maintenance and updates.
+ * Consider how this could be expanded for larger applications.
  */
 const navLinks = [
     { path: '/', label: 'Home' },
@@ -24,6 +52,30 @@ const navLinks = [
     { path: '/contact', label: 'Contact' }
 ];
 
+/**
+ * Animation Variants
+ * 
+ * Framer Motion configurations for smooth transitions.
+ * Experiment with timing and easing functions.
+ */
+const variants = {
+    // ... existing variants ...
+};
+
+/**
+ * Main Component Implementation
+ * 
+ * The component manages:
+ * 1. Route state and updates
+ * 2. Scroll position effects
+ * 3. Mobile menu interactions
+ * 4. Navigation animations
+ * 
+ * Learning Challenge:
+ * - Add dropdown menus
+ * - Implement breadcrumbs
+ * - Create custom transitions
+ */
 const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const location = useLocation();
@@ -106,30 +158,19 @@ const Navbar = () => {
 export default Navbar;
 
 /**
- * Learning Exercises:
+ * Further Learning Resources:
  * 
- * 1. Mobile Responsiveness
- *    - Add a hamburger menu for mobile screens
- *    - Implement a sliding menu panel
- *    - Use Tailwind's responsive prefixes (sm:, md:, lg:)
+ * 1. React Router Documentation:
+ *    https://reactrouter.com/docs/en/v6
  * 
- * 2. Active Link Styling
- *    - Add visual indication for current route
- *    - Use NavLink component from react-router-dom
- *    - Implement custom active styles
+ * 2. Framer Motion:
+ *    https://www.framer.com/motion/
  * 
- * 3. Animation Enhancement
- *    - Add subtle animations for hover states
- *    - Implement a slide-in animation for page transitions
- *    - Add loading states for navigation
+ * 3. Intersection Observer:
+ *    https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
  * 
- * 4. Accessibility Improvements
- *    - Add ARIA labels
- *    - Implement keyboard navigation
- *    - Add skip-to-main-content link
- * 
- * 5. Theme Switching
- *    - Add light/dark mode toggle
- *    - Implement color scheme preference detection
- *    - Add smooth theme transitions
+ * Practice Projects:
+ * 1. Create a mega menu
+ * 2. Build a sticky header
+ * 3. Implement route transitions
  */

@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import { PageTransition } from './components/NavigationEffects';
+import NavigationEffects from './components/NavigationEffects';
 import AIModelShowcase from './components/AIModelShowcase.tsx';
 import BackgroundPattern from './components/BackgroundPattern';
 import ProfileSidebar from './components/ProfileSidebar';
@@ -120,13 +120,13 @@ const ContactPage = () => (
  * Wraps routes in PageTransition component for smooth navigation animations.
  */
 const AppRoutes = () => (
-  <PageTransition>
+  <NavigationEffects>
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/projects" element={<ProjectsPage />} />
       <Route path="/contact" element={<ContactPage />} />
     </Routes>
-  </PageTransition>
+  </NavigationEffects>
 );
 
 /**

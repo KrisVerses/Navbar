@@ -13,28 +13,37 @@ import gsap from 'gsap';
 /**
  * AIModelShowcase Component
  * 
- * A sophisticated 3D visualization that combines Three.js, TensorFlow.js, and p5.js
- * to create an interactive neural network representation.
+ * This component creates an interactive 3D visualization using Three.js and WebGL.
+ * It demonstrates advanced concepts in 3D graphics programming and particle systems.
+ * 
+ * Key Technical Concepts:
+ * 1. Three.js Scene Setup
+ * 2. Particle System Management
+ * 3. Ray Casting for Interaction
+ * 4. Camera Controls
+ * 5. WebGL Shaders
  * 
  * Learning Exercises:
- * 1. Particle Systems: Study how the nodes are created and animated
- *    - Examine the particle geometry and shader material
- *    - Understand how positions, colors, and sizes are updated
  * 
- * 2. Interactive 3D: Learn about user interaction in Three.js
- *    - Study the OrbitControls implementation
- *    - Understand raycasting for particle selection
- *    - See how mouse events affect the visualization
+ * Exercise 1 - Scene Understanding:
+ * - Identify the key components of the Three.js scene
+ * - Explain how the camera position affects the view
+ * - Describe how lighting affects the particles
  * 
- * 3. Neural Networks: Explore the TensorFlow.js integration
- *    - Look at how the model is structured
- *    - Understand how predictions influence particle movement
- *    - Study the relationship between AI and visualization
+ * Exercise 2 - Particle System:
+ * - How are particles created and positioned?
+ * - What determines particle color and size?
+ * - How is particle movement calculated?
  * 
- * 4. Creative Coding: Learn about creative visualization
- *    - See how p5.js creates the background flow field
- *    - Study the shader effects and post-processing
- *    - Understand how multiple libraries work together
+ * Exercise 3 - User Interaction:
+ * - Trace the flow of mouse events
+ * - Understand how ray casting selects particles
+ * - Analyze the orbit controls implementation
+ * 
+ * Exercise 4 - Performance:
+ * - What optimizations are used for particle rendering?
+ * - How is memory managed for large particle counts?
+ * - When and why is requestAnimationFrame used?
  */
 
 interface NeuralNode {
@@ -228,6 +237,47 @@ const analyzeMood = (input: string): DynamicMoodSettings => {
     return dynamicSettings;
 };
 
+/**
+ * Custom hook for managing the 3D scene
+ * 
+ * Learning Points:
+ * 1. React hook patterns
+ * 2. Three.js initialization
+ * 3. WebGL context management
+ * 4. Cleanup and memory management
+ */
+const useThreeScene = () => {
+    // ... existing code ...
+};
+
+/**
+ * Particle System Configuration
+ * 
+ * These settings control the visual appearance and behavior of particles.
+ * 
+ * Exercise: Try modifying these values to understand their impact:
+ * - Change particle counts and observe performance
+ * - Adjust colors and see visual effects
+ * - Modify speeds and watch behavior changes
+ */
+const PARTICLE_CONFIG = {
+    // ... existing configuration ...
+};
+
+/**
+ * Main Component Implementation
+ * 
+ * The component manages:
+ * 1. Scene initialization and cleanup
+ * 2. Event handling for user interaction
+ * 3. Animation loop for continuous rendering
+ * 4. State management for UI elements
+ * 
+ * Learning Challenge:
+ * - Add a new interaction mode (e.g., particle attraction)
+ * - Implement particle color transitions
+ * - Create custom particle shapes
+ */
 const AIModelShowcase = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const p5ContainerRef = useRef<HTMLDivElement>(null);
@@ -1036,4 +1086,44 @@ const AIModelShowcase = () => {
     );
 };
 
-export default AIModelShowcase; 
+/**
+ * Shader Implementation
+ * 
+ * GLSL shaders control the visual appearance of particles.
+ * 
+ * Learning Topics:
+ * 1. GLSL syntax and structure
+ * 2. Vertex vs Fragment shaders
+ * 3. Uniform and attribute usage
+ * 4. Color and position calculations
+ */
+const vertexShader = `
+    // ... existing shader code ...
+`;
+
+const fragmentShader = `
+    // ... existing shader code ...
+`;
+
+export default AIModelShowcase;
+
+/**
+ * Further Learning Resources:
+ * 
+ * 1. Three.js Documentation:
+ *    https://threejs.org/docs/
+ * 
+ * 2. WebGL Fundamentals:
+ *    https://webglfundamentals.org/
+ * 
+ * 3. GLSL Shaders:
+ *    https://thebookofshaders.com/
+ * 
+ * 4. React + Three.js:
+ *    https://docs.pmnd.rs/react-three-fiber/
+ * 
+ * Practice Projects:
+ * 1. Create a simple solar system
+ * 2. Build a particle-based logo animation
+ * 3. Implement interactive particle waves
+ */ 

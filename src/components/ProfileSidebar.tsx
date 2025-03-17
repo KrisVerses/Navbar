@@ -6,11 +6,38 @@ import BackgroundPattern from './BackgroundPattern';
 /**
  * ProfileSidebar Component
  * 
- * A minimal sidebar featuring:
- * - Profile image
- * - Brief introduction
- * - Professional summary
- * - Subtle animations
+ * A dynamic sidebar component that showcases professional information,
+ * tech stack, and interactive filtering capabilities. Demonstrates advanced
+ * React patterns and modern UI/UX practices.
+ * 
+ * Key Concepts:
+ * 1. Component Composition
+ * 2. State Management
+ * 3. Dynamic Filtering
+ * 4. CSS Grid/Flexbox Layout
+ * 5. Framer Motion Animations
+ * 
+ * Learning Exercises:
+ * 
+ * Exercise 1 - State Management:
+ * - How is the tech stack data structured?
+ * - What triggers filter updates?
+ * - How are active filters managed?
+ * 
+ * Exercise 2 - Layout Techniques:
+ * - Study the grid system implementation
+ * - Analyze responsive breakpoints
+ * - Understand flex container usage
+ * 
+ * Exercise 3 - Animation Logic:
+ * - How are transitions triggered?
+ * - What elements use Framer Motion?
+ * - Study animation timing and easing
+ * 
+ * Exercise 4 - Optimization:
+ * - Identify memoization opportunities
+ * - Analyze render performance
+ * - Study event handler optimization
  */
 
 interface TechItem {
@@ -28,6 +55,55 @@ interface TechStackData {
 
 type CategoryId = 'all' | keyof TechStackData;
 
+/**
+ * Type Definitions
+ * 
+ * Clear type definitions improve code maintainability and provide
+ * better IDE support. Study how these types are used throughout
+ * the component.
+ */
+interface Technology {
+    name: string;
+    icon: string;
+    category: TechCategory;
+    proficiency: number;
+    description: string;
+}
+
+/**
+ * Tech Stack Configuration
+ * 
+ * Centralized data management for easy updates and maintenance.
+ * Consider how this could be expanded for different use cases.
+ */
+const techStack: Technology[] = [
+    // ... existing tech stack ...
+];
+
+/**
+ * Utility Functions
+ * 
+ * These helper functions handle common operations and calculations.
+ * Understanding these is crucial for component functionality.
+ */
+const utils = {
+    // ... existing utility functions ...
+};
+
+/**
+ * Main Component Implementation
+ * 
+ * The component manages:
+ * 1. Tech stack filtering and display
+ * 2. Category management
+ * 3. Responsive layout
+ * 4. Animation states
+ * 
+ * Learning Challenge:
+ * - Add search functionality
+ * - Implement sorting options
+ * - Create custom filter animations
+ */
 const ProfileSidebar = () => {
     const [activeCategory, setActiveCategory] = useState<CategoryId>('all');
 
@@ -242,4 +318,22 @@ const ProfileSidebar = () => {
     );
 };
 
-export default ProfileSidebar; 
+export default ProfileSidebar;
+
+/**
+ * Further Learning Resources:
+ * 
+ * 1. React Performance:
+ *    https://react.dev/learn/render-and-commit
+ * 
+ * 2. CSS Grid Guide:
+ *    https://css-tricks.com/snippets/css/complete-guide-grid/
+ * 
+ * 3. Framer Motion:
+ *    https://www.framer.com/motion/
+ * 
+ * Practice Projects:
+ * 1. Create a filterable portfolio
+ * 2. Build an animated skill tree
+ * 3. Implement a tech radar chart
+ */ 

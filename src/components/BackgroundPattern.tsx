@@ -1,11 +1,81 @@
-import { useEffect, useRef } from 'react';
-
 /**
  * BackgroundPattern Component
  * 
- * Creates an animated background with floating triangular shapes using Three.js.
- * The triangles slowly rotate and move in a wave-like pattern to create
- * a subtle, ethereal atmosphere without interfering with the main content.
+ * A dynamic background pattern generator using HTML Canvas and requestAnimationFrame.
+ * This component demonstrates advanced canvas manipulation and animation techniques.
+ * 
+ * Key Concepts:
+ * 1. Canvas Context Management
+ * 2. Dynamic Pattern Generation
+ * 3. Animation Loop Optimization
+ * 4. Responsive Design
+ * 
+ * Learning Exercises:
+ * 
+ * Exercise 1 - Canvas Basics:
+ * - How is the canvas sized and scaled?
+ * - What's the difference between canvas dimensions and CSS dimensions?
+ * - How does device pixel ratio affect rendering?
+ * 
+ * Exercise 2 - Pattern Generation:
+ * - Analyze how dots are positioned
+ * - Understand the connection line logic
+ * - Study the animation timing system
+ * 
+ * Exercise 3 - Performance:
+ * - How is the animation loop optimized?
+ * - What techniques prevent memory leaks?
+ * - How is canvas clearing and redrawing managed?
+ * 
+ * Exercise 4 - Customization:
+ * Try modifying these aspects:
+ * - Change dot colors and sizes
+ * - Adjust movement patterns
+ * - Modify connection line rules
+ */
+
+import { useEffect, useRef } from 'react';
+
+interface Point {
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+}
+
+/**
+ * Configuration Constants
+ * 
+ * These values control the visual appearance and behavior of the pattern.
+ * Experiment with these values to understand their impact on the animation.
+ */
+const CONFIG = {
+    // ... existing configuration ...
+};
+
+/**
+ * Utility Functions
+ * 
+ * These helper functions handle common calculations and operations.
+ * Understanding these is crucial for canvas-based animations.
+ */
+const utils = {
+    // ... existing utility functions ...
+};
+
+/**
+ * Main Component Implementation
+ * 
+ * The component handles:
+ * 1. Canvas setup and cleanup
+ * 2. Animation frame management
+ * 3. Pattern generation and updates
+ * 4. Window resize handling
+ * 
+ * Learning Challenge:
+ * - Add mouse interaction effects
+ * - Implement color transitions
+ * - Create new pattern variations
  */
 const BackgroundPattern = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -108,4 +178,22 @@ const BackgroundPattern = () => {
     );
 };
 
-export default BackgroundPattern; 
+export default BackgroundPattern;
+
+/**
+ * Further Learning Resources:
+ * 
+ * 1. Canvas API Documentation:
+ *    https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API
+ * 
+ * 2. Animation Techniques:
+ *    https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
+ * 
+ * 3. Performance Optimization:
+ *    https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Optimizing_canvas
+ * 
+ * Practice Projects:
+ * 1. Create a particle rain effect
+ * 2. Build an interactive flow field
+ * 3. Implement a cellular automaton
+ */ 
