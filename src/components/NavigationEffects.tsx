@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 
 /**
  * NavigationEffects Component
  * 
  * Provides visual feedback during navigation:
  * 1. Loading bar animation at the top of the navbar
- * 2. Page transition effects
+ * 2. Page transition effects using Framer Motion
  * 3. Loading state indicators
  */
 
@@ -17,23 +18,20 @@ export const LoadingBar = () => (
 );
 
 export const PageTransition = ({ children }: { children: React.ReactNode }) => {
-    const [isVisible, setIsVisible] = useState(false);
     const location = useLocation();
 
-    useEffect(() => {
-        setIsVisible(true);
-        return () => setIsVisible(false);
-    }, [location]);
-
     return (
-        <div
-            className={`
-        transition-all duration-300 ease-out
-        ${isVisible ? 'animate-slideIn' : 'animate-slideOut'}
-      `}
-        >
-            {children}
-        </div>
+        <AnimatePresence mode="wait">
+            <motion.div
+                key={location.pathname}
+                initial={{ x: 20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -20, opacity: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+            >
+                {children}
+            </motion.div>
+        </AnimatePresence>
     );
 };
 

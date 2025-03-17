@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import { PageTransition, NavigationIndicator } from './components/NavigationEffects';
 import './App.css';
@@ -12,6 +12,35 @@ import './App.css';
  * - Loading indicators
  * - Layout structure
  */
+
+// Separate component for routes to access location
+const AppRoutes = () => {
+  return (
+    <PageTransition>
+      <Routes>
+        <Route path="/" element={
+          <div className="p-4">
+            <h1 className="text-2xl font-semibold text-museum-text">Home Page</h1>
+            <p className="mt-4 text-museum-text/80">Welcome to the Museum</p>
+          </div>
+        } />
+        <Route path="/projects" element={
+          <div className="p-4">
+            <h1 className="text-2xl font-semibold text-museum-text">Projects</h1>
+            <p className="mt-4 text-museum-text/80">Our latest exhibitions</p>
+          </div>
+        } />
+        <Route path="/contact" element={
+          <div className="p-4">
+            <h1 className="text-2xl font-semibold text-museum-text">Contact</h1>
+            <p className="mt-4 text-museum-text/80">Get in touch with us</p>
+          </div>
+        } />
+      </Routes>
+    </PageTransition>
+  );
+};
+
 function App() {
   return (
     <Router>
@@ -22,28 +51,7 @@ function App() {
 
         {/* Main content area with page transitions */}
         <main className="pt-16 px-4 max-w-7xl mx-auto">
-          <PageTransition>
-            <Routes>
-              <Route path="/" element={
-                <div className="p-4">
-                  <h1 className="text-2xl font-semibold text-museum-text">Home Page</h1>
-                  <p className="mt-4 text-museum-text/80">Welcome to the Museum</p>
-                </div>
-              } />
-              <Route path="/projects" element={
-                <div className="p-4">
-                  <h1 className="text-2xl font-semibold text-museum-text">Projects</h1>
-                  <p className="mt-4 text-museum-text/80">Our latest exhibitions</p>
-                </div>
-              } />
-              <Route path="/contact" element={
-                <div className="p-4">
-                  <h1 className="text-2xl font-semibold text-museum-text">Contact</h1>
-                  <p className="mt-4 text-museum-text/80">Get in touch with us</p>
-                </div>
-              } />
-            </Routes>
-          </PageTransition>
+          <AppRoutes />
         </main>
       </div>
     </Router>
