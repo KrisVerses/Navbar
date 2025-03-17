@@ -5,7 +5,12 @@
 
 @layer base {
   html {
+    @apply antialiased;
     font-family: Inter, system-ui, sans-serif;
+  }
+  
+  body {
+    @apply bg-white text-gray-900 min-h-screen overflow-x-hidden;
   }
 }
 
@@ -13,13 +18,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-body {
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: #E5E1DB;
-  color: #4A3B32;
 }
 
 h1 {
@@ -60,4 +58,22 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+/* Custom scrollbar for the entire page */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(243, 244, 246, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.2);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.3);
 }
