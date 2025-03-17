@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { MenuIcon, CloseIcon } from './HamburgerMenu';
+import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 /**
  * Navbar Component
  * 
@@ -17,146 +17,133 @@ import { MenuIcon, CloseIcon } from './HamburgerMenu';
  * 3. Responsive design patterns
  * 4. Accessibility considerations
  */
+const navLinks = [
+    { path: '/', label: 'Home' },
+    { path: '/projects', label: 'Projects' },
+    { path: '/contact', label: 'Contact' }
+];
+
 const Navbar = () => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
+    const location = useLocation();
 
-    // Common NavLink classes with active state styling
-    const navLinkClasses = ({ isActive }: { isActive: boolean }) => `
-        text-museum-text hover:text-museum-hover transition-colors 
-        ${isActive ? 'font-semibold border-b-2 border-museum-text' : ''}
-    `;
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 20);
+        };
 
-    // Mobile NavLink classes with active state styling
-    const mobileNavLinkClasses = ({ isActive }: { isActive: boolean }) => `
-        block text-museum-text hover:text-museum-hover transition-colors py-2
-        ${isActive ? 'font-semibold bg-museum-text/5' : ''}
-    `;
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    useEffect(() => {
+        setIsOpen(false);
+    }, [location]);
 
     return (
-        // Navigation container with fixed positioning
-        // z-50 ensures navbar stays above other content
-        <nav className="fixed top-0 left-0 right-0 bg-museum-bg border-b border-museum-text/10 z-50">
-            {/* 
-        Responsive container with maximum width
-        - max-w-7xl: Sets a max-width of 80rem (1280px)
-        - mx-auto: Centers the container
-        - px-4: Base padding of 1rem
-        - sm:px-6: Increases padding to 1.5rem on small screens
-        - lg:px-8: Increases padding to 2rem on large screens
-      */}
+        <nav
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'backdrop-blur-md bg-museum-bg/30' : 'bg-transparent'
+                }`}
+        >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* 
-          Flex container for navbar content
-          - h-16: Fixed height of 4rem
-          - justify-between: Spaces logo and navigation links
-          - items-center: Vertically centers all items
-        */}
-                <div className="flex justify-between items-center h-16">
-                    {/* 
-            Logo/Brand link
-            - font-semibold: Bolder font weight for emphasis
-            - transition-colors: Smooth color transition on hover
-          */}
-                    <NavLink
-                        to="/"
-                        className={({ isActive }) => `
-                          text-museum-text text-lg font-semibold hover:text-museum-hover transition-colors
-                          ${isActive ? 'text-museum-hover' : ''}
-                        `}
-                    >
-                        Museum
-                    </NavLink>
-                    {/* 
-            Desktop Navigation - Hidden on mobile
-            - gap-8: Adds 2rem spacing between links
-            - hidden md:flex: Hides links on medium and larger screens
-          */}
-                    <div className="hidden md:flex gap-8">
-                        <NavLink
-                            to="/"
-                            className={navLinkClasses}
+                <div className="flex items-center justify-between h-16">
+                    {/* Logo */}
+                    <Link to="/" className="flex items-center space-x-2">
+                        <motion.span
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.6, ease: [0.33, 1, 0.68, 1] }}
+                            className="text-xl font-light tracking-wider text-museum-text"
                         >
-                            Home
-                        </NavLink>
-                        <NavLink
-                            to="/projects"
-                            className={navLinkClasses}
-                        >
-                            Projects
-                        </NavLink>
-                        <NavLink
-                            to="/contact"
-                            className={navLinkClasses}
-                        >
-                            Contact
-                        </NavLink>
+                            Museum
+                        </motion.span>
+                    </Link>
+
+                    {/* Desktop Navigation */}
+                    <div className="hidden md:flex items-center space-x-8">
+                        {navLinks.map(({ path, label }) => (
+                            <Link
+                                key={path}
+                                to={path}
+                                className="relative group"
+                            >
+                                <motion.span
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.6, ease: [0.33, 1, 0.68, 1] }}
+                                    className={`text-sm tracking-wider font-light ${location.pathname === path
+                                        ? 'text-museum-text'
+                                        : 'text-museum-text/70 hover:text-museum-text transition-colors duration-300'
+                                        }`}
+                                >
+                                    {label}
+                                </motion.span>
+                                {location.pathname === path && (
+                                    <motion.div
+                                        layoutId="underline"
+                                        className="absolute left-0 right-0 h-px bg-museum-text/30"
+                                        style={{ bottom: '-4px' }}
+                                        transition={{ duration: 0.6, ease: [0.33, 1, 0.68, 1] }}
+                                    />
+                                )}
+                            </Link>
+                        ))}
                     </div>
-                    {/* 
-            Mobile Menu Button - Hidden on desktop
-            - text-museum-text: Custom theme color
-            - md:hidden: Hides button on medium and larger screens
-          */}
-                    <button className="text-museum-text md:hidden"
-                        aria-label={isMenuOpen ? 'Close menu' : 'Open menu'} onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                        {/* 
-              Hamburger menu icon
-              - svg: Vector graphics for scalable icons
-              - fill-none: No fill color
-              - viewBox: Defines the size of the icon
-              - stroke: Color of the icon
-            */}
-                        {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
-                    </button>
-                    {/* 
-            Mobile Menu Panel - Hidden on desktop
-            - absolute: Positions the panel absolutely within the navbar
-            - top-16: Places the panel 4rem from the top of the navbar
-            - left-0: Places the panel flush with the left edge of the navbar
-            - right-0: Places the panel flush with the right edge of the navbar
-            - w-full: Makes the panel full width
-            - bg-museum-bg: Background color of the panel
-            - shadow-lg: Adds a shadow for depth
-            - md:hidden: Hides the panel on medium and larger screens
-            - transition-all: Applies transitions to all properties
-            - duration-300: Duration of the transition
-            - ease-in-out: Smooth transition
-            - ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}: Opacity and visibility based on menu state
-          */}
-                    <div
-                        className={`
-              absolute top-16 left-0 right-0 w-full
-              bg-museum-bg shadow-lg
-              md:hidden
-              transition-all duration-300 ease-in-out
-              ${isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}
-            `}
-                    >
-                        <div className="px-4 py-2 space-y-2">
-                            <NavLink
-                                to="/"
-                                className={mobileNavLinkClasses}
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                Home
-                            </NavLink>
-                            <NavLink
-                                to="/projects"
-                                className={mobileNavLinkClasses}
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                Projects
-                            </NavLink>
-                            <NavLink
-                                to="/contact"
-                                className={mobileNavLinkClasses}
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                Contact
-                            </NavLink>
-                        </div>
+
+                    {/* Mobile Menu Button */}
+                    <div className="md:hidden">
+                        <button
+                            onClick={() => setIsOpen(!isOpen)}
+                            className="relative w-8 h-8 flex items-center justify-center"
+                            aria-label="Toggle menu"
+                        >
+                            <div className="absolute w-5 h-5">
+                                <span
+                                    className={`absolute h-px bg-museum-text transform transition-all duration-300 ease-in-out ${isOpen
+                                        ? 'w-5 rotate-45 top-2.5'
+                                        : 'w-4 -translate-y-1'
+                                        }`}
+                                />
+                                <span
+                                    className={`absolute h-px bg-museum-text transform transition-all duration-300 ease-in-out ${isOpen
+                                        ? 'w-5 -rotate-45 top-2.5'
+                                        : 'w-3 translate-y-1'
+                                        }`}
+                                />
+                            </div>
+                        </button>
                     </div>
                 </div>
             </div>
+
+            {/* Mobile Menu */}
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3, ease: [0.33, 1, 0.68, 1] }}
+                        className="md:hidden backdrop-blur-md bg-museum-bg/30"
+                    >
+                        <div className="px-4 pt-2 pb-6 space-y-2">
+                            {navLinks.map(({ path, label }) => (
+                                <Link
+                                    key={path}
+                                    to={path}
+                                    className={`block py-2 text-sm tracking-wider font-light ${location.pathname === path
+                                        ? 'text-museum-text'
+                                        : 'text-museum-text/70'
+                                        }`}
+                                >
+                                    {label}
+                                </Link>
+                            ))}
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </nav>
     );
 };
@@ -191,40 +178,3 @@ export default Navbar;
  *    - Implement color scheme preference detection
  *    - Add smooth theme transitions
  */
-
-// We can create a slide/fade effect when changing routes by:
-// 1. Adding a transition wrapper component
-// 2. Using Framer Motion or React Transition Group
-// Here's a simple example:
-
-const PageTransition = ({ children }: { children: React.ReactNode }) => {
-    return (
-        <div className="
-      animate-slideIn 
-      transition-all duration-300 
-      translate-x-0 opacity-100
-      enter:translate-x-full enter:opacity-0
-      leave:translate-x-[-100%] leave:opacity-0
-    ">
-            {children}
-        </div>
-    );
-};
-
-// We can add loading indicators:
-// 1. Subtle loading bar at the top of navbar
-// 2. Skeleton loading state for content
-// 3. Loading spinner for navigation
-
-const LoadingBar = () => (
-    <div className="
-    absolute top-0 left-0 h-0.5 
-    bg-museum-text/20 w-full
-    overflow-hidden
-  ">
-        <div className="
-      h-full w-1/3 bg-museum-text
-      animate-loadingBar
-    "/>
-    </div>
-); 
