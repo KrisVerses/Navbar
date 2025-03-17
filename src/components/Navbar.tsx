@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+import BackgroundPattern from './BackgroundPattern';
 /**
  * Navbar Component
  * 
@@ -24,7 +25,6 @@ const navLinks = [
 ];
 
 const Navbar = () => {
-    const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const location = useLocation();
 
@@ -37,114 +37,69 @@ const Navbar = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    useEffect(() => {
-        setIsOpen(false);
-    }, [location]);
-
     return (
-        <nav
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'backdrop-blur-md bg-museum-bg/30' : 'bg-transparent'
-                }`}
-        >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16">
-                    {/* Logo */}
-                    <Link to="/" className="flex items-center space-x-2">
-                        <motion.span
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.6, ease: [0.33, 1, 0.68, 1] }}
-                            className="text-xl font-light tracking-wider text-museum-text"
-                        >
-                            Museum
-                        </motion.span>
+        <>
+            <BackgroundPattern />
+            <motion.nav
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: [0.33, 1, 0.68, 1] }}
+                className={`fixed top-0 left-0 right-0 h-16 bg-white/60 backdrop-blur-md z-50 
+                           transition-all duration-300 ${scrolled ? 'shadow-lg shadow-blue-900/5' : ''}`}
+            >
+                <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between relative">
+                    {/* Logo and Title */}
+                    <Link
+                        to="/"
+                        className="group flex items-center gap-3 transition-transform duration-300 hover:scale-[0.98]"
+                    >
+                        <div className="relative">
+                            <div className="absolute -inset-2 bg-blue-50/80 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            <img
+                                src="./images/KV-logo-transparent.png"
+                                alt="KrisVerses Portfolio"
+                                className="h-8 w-auto object-contain relative"
+                            />
+                        </div>
+                        <div className="flex flex-col relative">
+                            <div className="flex items-center gap-2">
+                                <h1 className="text-base font-medium tracking-wide text-gray-900">
+                                    KRIS VERSES
+                                </h1>
+                                <span className="text-gray-400">|</span>
+                                <span className="text-[11px] tracking-wider text-gray-500">
+                                    Creative Developer
+                                </span>
+                            </div>
+                            <div className="h-0.5 w-0 group-hover:w-full bg-blue-500/20 transition-all duration-300" />
+                        </div>
                     </Link>
 
-                    {/* Desktop Navigation */}
-                    <div className="hidden md:flex items-center space-x-8">
+                    {/* Navigation Links */}
+                    <div className="flex items-center gap-8">
                         {navLinks.map(({ path, label }) => (
                             <Link
                                 key={path}
                                 to={path}
-                                className="relative group"
+                                className={`relative py-1 text-sm transition-colors duration-200 group
+                                          ${location.pathname === path
+                                        ? 'text-blue-600 font-medium'
+                                        : 'text-gray-600 hover:text-gray-900'
+                                    }`}
                             >
-                                <motion.span
-                                    initial={{ opacity: 0, y: -10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.6, ease: [0.33, 1, 0.68, 1] }}
-                                    className={`text-sm tracking-wider font-light ${location.pathname === path
-                                        ? 'text-museum-text'
-                                        : 'text-museum-text/70 hover:text-museum-text transition-colors duration-300'
-                                        }`}
-                                >
-                                    {label}
-                                </motion.span>
-                                {location.pathname === path && (
-                                    <motion.div
-                                        layoutId="underline"
-                                        className="absolute left-0 right-0 h-px bg-museum-text/30"
-                                        style={{ bottom: '-4px' }}
-                                        transition={{ duration: 0.6, ease: [0.33, 1, 0.68, 1] }}
-                                    />
-                                )}
+                                {label}
+                                <div className={`absolute bottom-0 left-0 h-0.5 bg-blue-500/20 transition-all duration-300
+                                              ${location.pathname === path
+                                        ? 'w-full'
+                                        : 'w-0 group-hover:w-full'
+                                    }`}
+                                />
                             </Link>
                         ))}
                     </div>
-
-                    {/* Mobile Menu Button */}
-                    <div className="md:hidden">
-                        <button
-                            onClick={() => setIsOpen(!isOpen)}
-                            className="relative w-8 h-8 flex items-center justify-center"
-                            aria-label="Toggle menu"
-                        >
-                            <div className="absolute w-5 h-5">
-                                <span
-                                    className={`absolute h-px bg-museum-text transform transition-all duration-300 ease-in-out ${isOpen
-                                        ? 'w-5 rotate-45 top-2.5'
-                                        : 'w-4 -translate-y-1'
-                                        }`}
-                                />
-                                <span
-                                    className={`absolute h-px bg-museum-text transform transition-all duration-300 ease-in-out ${isOpen
-                                        ? 'w-5 -rotate-45 top-2.5'
-                                        : 'w-3 translate-y-1'
-                                        }`}
-                                />
-                            </div>
-                        </button>
-                    </div>
                 </div>
-            </div>
-
-            {/* Mobile Menu */}
-            <AnimatePresence>
-                {isOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3, ease: [0.33, 1, 0.68, 1] }}
-                        className="md:hidden backdrop-blur-md bg-museum-bg/30"
-                    >
-                        <div className="px-4 pt-2 pb-6 space-y-2">
-                            {navLinks.map(({ path, label }) => (
-                                <Link
-                                    key={path}
-                                    to={path}
-                                    className={`block py-2 text-sm tracking-wider font-light ${location.pathname === path
-                                        ? 'text-museum-text'
-                                        : 'text-museum-text/70'
-                                        }`}
-                                >
-                                    {label}
-                                </Link>
-                            ))}
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </nav>
+            </motion.nav>
+        </>
     );
 };
 

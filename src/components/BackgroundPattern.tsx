@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import * as THREE from 'three';
 
 /**
  * BackgroundPattern Component
@@ -9,138 +8,102 @@ import * as THREE from 'three';
  * a subtle, ethereal atmosphere without interfering with the main content.
  */
 const BackgroundPattern = () => {
-    // Reference to the container div for Three.js scene
-    const containerRef = useRef<HTMLDivElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
-        if (!containerRef.current) return;
+        const canvas = canvasRef.current;
+        if (!canvas) return;
 
-        const container = containerRef.current;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
 
-        // Initialize Three.js scene
-        const scene = new THREE.Scene();
+        // Set canvas size
+        const setCanvasSize = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        };
+        setCanvasSize();
+        window.addEventListener('resize', setCanvasSize);
 
-        // Setup camera with perspective that works well for background elements
-        const camera = new THREE.PerspectiveCamera(
-            50, // Field of view - chosen for subtle perspective effect
-            container.clientWidth / container.clientHeight,
-            0.1,
-            1000
-        );
-        camera.position.z = 50; // Position camera to view all triangles
+        // Pattern configuration
+        const dots: { x: number; y: number; size: number; speedX: number; speedY: number }[] = [];
+        const numDots = 50;
+        const colors = [
+            'rgba(59, 130, 246, 0.1)',  // blue-500
+            'rgba(37, 99, 235, 0.1)',   // blue-600
+            'rgba(29, 78, 216, 0.1)',   // blue-700
+            'rgba(30, 64, 175, 0.08)',  // blue-800
+        ];
 
-        // Initialize renderer with transparency support
-        const renderer = new THREE.WebGLRenderer({
-            antialias: true, // Smooth edges
-            alpha: true,     // Enable transparency
-        });
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        renderer.setClearColor(0x000000, 0); // Transparent background
-        container.appendChild(renderer.domElement);
-
-        // Create triangular geometry
-        const triangles: THREE.Mesh[] = [];
-        const triangleGeometry = new THREE.BufferGeometry();
-        // Define equilateral triangle vertices
-        const vertices = new Float32Array([
-            -1.0, -0.866, 0,    // bottom left
-            1.0, -0.866, 0,     // bottom right
-            0.0, 0.866, 0,      // top
-        ]);
-        triangleGeometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
-
-        // Create multiple triangles with random positions and rotations
-        for (let i = 0; i < 15; i++) {
-            // Material with very low opacity to create subtle effect
-            const material = new THREE.MeshBasicMaterial({
-                color: 0xA28A77,      // Warm, neutral color matching the theme
-                transparent: true,
-                opacity: 0.03,        // Very subtle visibility
-                side: THREE.DoubleSide // Visible from both sides
+        // Initialize dots
+        for (let i = 0; i < numDots; i++) {
+            dots.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 4 + 2,
+                speedX: (Math.random() - 0.5) * 0.3,
+                speedY: (Math.random() - 0.5) * 0.3
             });
-
-            const triangle = new THREE.Mesh(triangleGeometry, material);
-
-            // Randomize position within a reasonable view area
-            triangle.position.set(
-                (Math.random() - 0.5) * 100,  // X spread
-                (Math.random() - 0.5) * 100,  // Y spread
-                (Math.random() - 0.5) * 50    // Z spread (smaller to keep in view)
-            );
-
-            // Random initial rotation
-            triangle.rotation.set(
-                Math.random() * Math.PI,
-                Math.random() * Math.PI,
-                Math.random() * Math.PI
-            );
-
-            // Random size variation
-            triangle.scale.setScalar(10 + Math.random() * 20);
-
-            triangles.push(triangle);
-            scene.add(triangle);
         }
 
-        // Animation loop
+        // Animation
+        let animationFrameId: number;
         const animate = () => {
-            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Update each triangle's rotation and position
-            triangles.forEach((triangle, i) => {
-                // Slow, continuous rotation
-                triangle.rotation.x += 0.0005;
-                triangle.rotation.y += 0.0003;
-                // Gentle floating motion using sine wave
-                triangle.position.y += Math.sin(Date.now() * 0.001 + i) * 0.02;
+            // Draw and update dots
+            dots.forEach((dot, index) => {
+                // Update position
+                dot.x += dot.speedX;
+                dot.y += dot.speedY;
+
+                // Wrap around edges
+                if (dot.x < 0) dot.x = canvas.width;
+                if (dot.x > canvas.width) dot.x = 0;
+                if (dot.y < 0) dot.y = canvas.height;
+                if (dot.y > canvas.height) dot.y = 0;
+
+                // Draw dot
+                ctx.beginPath();
+                ctx.arc(dot.x, dot.y, dot.size, 0, Math.PI * 2);
+                ctx.fillStyle = colors[index % colors.length];
+                ctx.fill();
+
+                // Draw connections
+                dots.forEach((otherDot, otherIndex) => {
+                    if (index !== otherIndex) {
+                        const dx = dot.x - otherDot.x;
+                        const dy = dot.y - otherDot.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < 100) {
+                            ctx.beginPath();
+                            ctx.moveTo(dot.x, dot.y);
+                            ctx.lineTo(otherDot.x, otherDot.y);
+                            ctx.strokeStyle = `rgba(59, 130, 246, ${0.1 * (1 - distance / 100)})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.stroke();
+                        }
+                    }
+                });
             });
 
-            renderer.render(scene, camera);
+            animationFrameId = requestAnimationFrame(animate);
         };
 
-        // Responsive handling
-        const handleResize = () => {
-            if (!container) return;
-
-            const width = container.clientWidth;
-            const height = container.clientHeight;
-
-            // Update camera aspect ratio
-            camera.aspect = width / height;
-            camera.updateProjectionMatrix();
-
-            // Update renderer size
-            renderer.setSize(width, height);
-        };
-
-        window.addEventListener('resize', handleResize);
         animate();
 
-        // Cleanup function
         return () => {
-            window.removeEventListener('resize', handleResize);
-
-            // Dispose of Three.js resources to prevent memory leaks
-            renderer.dispose();
-            triangleGeometry.dispose();
-            triangles.forEach(triangle => {
-                if (triangle.material instanceof THREE.Material) {
-                    triangle.material.dispose();
-                }
-            });
-
-            // Remove canvas element
-            if (container.contains(renderer.domElement)) {
-                container.removeChild(renderer.domElement);
-            }
+            window.removeEventListener('resize', setCanvasSize);
+            cancelAnimationFrame(animationFrameId);
         };
     }, []);
 
     return (
-        <div
-            ref={containerRef}
-            className="fixed inset-0 pointer-events-none"
-            style={{ zIndex: 0 }}
+        <canvas
+            ref={canvasRef}
+            className="fixed inset-0 w-full h-full pointer-events-none opacity-50"
+            style={{ zIndex: -1 }}
         />
     );
 };
