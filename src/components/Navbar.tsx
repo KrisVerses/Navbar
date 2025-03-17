@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { MenuIcon, CloseIcon } from './HamburgerMenu';
 /**
  * Navbar Component
@@ -19,6 +19,19 @@ import { MenuIcon, CloseIcon } from './HamburgerMenu';
  */
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    // Common NavLink classes with active state styling
+    const navLinkClasses = ({ isActive }: { isActive: boolean }) => `
+        text-museum-text hover:text-museum-hover transition-colors
+        ${isActive ? 'font-semibold border-b-2 border-museum-text' : ''}
+    `;
+
+    // Mobile NavLink classes with active state styling
+    const mobileNavLinkClasses = ({ isActive }: { isActive: boolean }) => `
+        block text-museum-text hover:text-museum-hover transition-colors py-2
+        ${isActive ? 'font-semibold bg-museum-text/5' : ''}
+    `;
+
     return (
         // Navigation container with fixed positioning
         // z-50 ensures navbar stays above other content
@@ -44,36 +57,39 @@ const Navbar = () => {
             - font-semibold: Bolder font weight for emphasis
             - transition-colors: Smooth color transition on hover
           */}
-                    <Link
+                    <NavLink
                         to="/"
-                        className="text-museum-text text-lg font-semibold hover:text-museum-hover transition-colors"
+                        className={({ isActive }) => `
+                          text-museum-text text-lg font-semibold hover:text-museum-hover transition-colors
+                          ${isActive ? 'text-museum-hover' : ''}
+                        `}
                     >
                         Museum
-                    </Link>
+                    </NavLink>
                     {/* 
             Desktop Navigation - Hidden on mobile
             - gap-8: Adds 2rem spacing between links
             - hidden md:flex: Hides links on medium and larger screens
           */}
                     <div className="hidden md:flex gap-8">
-                        <Link
+                        <NavLink
                             to="/"
-                            className="text-museum-text hover:text-museum-hover transition-colors"
+                            className={navLinkClasses}
                         >
                             Home
-                        </Link>
-                        <Link
+                        </NavLink>
+                        <NavLink
                             to="/projects"
-                            className="text-museum-text hover:text-museum-hover transition-colors"
+                            className={navLinkClasses}
                         >
                             Projects
-                        </Link>
-                        <Link
+                        </NavLink>
+                        <NavLink
                             to="/contact"
-                            className="text-museum-text hover:text-museum-hover transition-colors"
+                            className={navLinkClasses}
                         >
                             Contact
-                        </Link>
+                        </NavLink>
                     </div>
                     {/* 
             Mobile Menu Button - Hidden on desktop
@@ -116,27 +132,27 @@ const Navbar = () => {
             `}
                     >
                         <div className="px-4 py-2 space-y-2">
-                            <Link
+                            <NavLink
                                 to="/"
-                                className="block text-museum-text hover:text-museum-hover transition-colors py-2"
+                                className={mobileNavLinkClasses}
                                 onClick={() => setIsMenuOpen(false)}
                             >
                                 Home
-                            </Link>
-                            <Link
+                            </NavLink>
+                            <NavLink
                                 to="/projects"
-                                className="block text-museum-text hover:text-museum-hover transition-colors py-2"
+                                className={mobileNavLinkClasses}
                                 onClick={() => setIsMenuOpen(false)}
                             >
                                 Projects
-                            </Link>
-                            <Link
+                            </NavLink>
+                            <NavLink
                                 to="/contact"
-                                className="block text-museum-text hover:text-museum-hover transition-colors py-2"
+                                className={mobileNavLinkClasses}
                                 onClick={() => setIsMenuOpen(false)}
                             >
                                 Contact
-                            </Link>
+                            </NavLink>
                         </div>
                     </div>
                 </div>
