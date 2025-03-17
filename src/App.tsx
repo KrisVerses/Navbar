@@ -1,9 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import { PageTransition } from './components/NavigationEffects';
 import AIModelShowcase from './components/AIModelShowcase.tsx';
 import BackgroundPattern from './components/BackgroundPattern';
+import ProfileSidebar from './components/ProfileSidebar';
 import './index.css';
 
 /**
@@ -37,7 +39,10 @@ const HomePage = () => (
     {...fadeIn}
     className="min-h-screen relative"
   >
-    <AIModelShowcase />
+    <ProfileSidebar />
+    <div className="lg:pl-[400px]">
+      <AIModelShowcase />
+    </div>
   </motion.div>
 );
 
@@ -147,6 +152,7 @@ function App() {
           <main className="relative">
             <AppRoutes />
           </main>
+          <Footer />
         </div>
       </div>
     </Router>
