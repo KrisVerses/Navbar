@@ -7,6 +7,7 @@ import AIModelShowcase from './components/AIModelShowcase.tsx';
 import BackgroundPattern from './components/BackgroundPattern';
 import ProfileSidebar from './components/ProfileSidebar';
 import './index.css';
+import { useState } from 'react';
 
 /**
  * App Component
@@ -34,17 +35,32 @@ const fadeIn = {
  * Landing page featuring the AIModelShowcase centerpiece.
  * The showcase is a Three.js visualization that serves as the main attraction.
  */
-const HomePage = () => (
-  <motion.div
-    {...fadeIn}
-    className="min-h-screen relative"
-  >
-    <ProfileSidebar />
-    <div className="lg:pl-[400px]">
-      <AIModelShowcase />
-    </div>
-  </motion.div>
-);
+const HomePage = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  return (
+    <motion.div
+      {...fadeIn}
+      className="min-h-screen relative"
+    >
+      <ProfileSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+      <motion.div
+        animate={{
+          marginLeft: isSidebarOpen ? "400px" : "0",
+          width: isSidebarOpen ? "calc(100% - 400px)" : "100%"
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 300,
+          damping: 30
+        }}
+        className="relative"
+      >
+        <AIModelShowcase isSidebarOpen={isSidebarOpen} />
+      </motion.div>
+    </motion.div>
+  );
+};
 
 /**
  * ProjectsPage Component
